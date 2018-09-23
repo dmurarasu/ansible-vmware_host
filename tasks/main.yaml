@@ -1,0 +1,22 @@
+---
+
+- name: Add esxi hosts to vCenter
+  vmware_host:
+    hostname: "{{ vcenter_auth.hostname | default(omit) }}"
+    username: "{{ vcenter_auth.username | default(omit) }}"
+    password: "{{ vcenter_auth.password | default(omit) }}"
+    port: "{{ vcenter_auth.port | default(omit) }}"
+    validate_certs: "{{ vcenter_auth.validate_certs | default(omit) }}"
+    esxi_hostname: "{{ item.name }}"
+    datacenter_name: "{{ item.datacenter }}"
+    cluster_name: "{{ item.cluster }}"
+    add_connected: "{{ item.add_conn | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    esxi_username: "{{ item.esxi_username }}"
+    esxi_password: "{{ item.esxi_password }}"
+    esxi_ssl_thumbprint: "{{ item.esxi_ssl_thumbprint }}" 
+  loop: "{{ esxi_hosts }}"
+  when: >
+    esxi_hosts is defined
+  tags:
+    - vmware_host
